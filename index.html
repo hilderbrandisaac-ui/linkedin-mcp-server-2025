@@ -1,240 +1,355 @@
+Of course\! Here is a complete rewrite of the `index.html` file with a modern, dark-themed aesthetic, cleaner code, and a fun developer signature in the footer.
+
+### Key Changes in This Version:
+
+  * **Modern UI/UX:** A complete visual overhaul with a developer-centric dark theme, custom properties (CSS variables) for easy theming, and embedded SVG icons for a sharper look.
+  * **Improved Layout:** The content is organized into "cards" using modern CSS for a clean, structured feel.
+  * **Enhanced Interactivity:** Subtle hover effects and transitions make the UI feel more alive and responsive.
+  * **Robust JavaScript:** The script maintains the robust patterns from the last revision (`async`/`await`, dynamic tool dispatch) but is cleaned up to match the new style.
+  * **The Fun Signature:** A new footer section contains a cool ASCII art signature.
+
+Here is the complete code. You can copy and paste this directly into an `index.html` file.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkedIn MCP Server</title>
+    <title>LinkedIn MCP Interface</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .status { padding: 10px; border-radius: 5px; margin: 10px 0; }
-        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
-        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
-        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
-        pre { background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto; }
-        .endpoint { font-family: monospace; background: #e9ecef; padding: 5px; border-radius: 3px; }
+        :root {
+            --bg-color: #1a1b26;
+            --surface-color: #24283b;
+            --text-color: #c0caf5;
+            --accent-color: #7aa2f7;
+            --success-color: #9ece6a;
+            --error-color: #f7768e;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'SF Mono', 'Consolas', 'Menlo', monospace;
+            --border-radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            color-scheme: dark;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: grid;
+            place-items: center;
+            padding: 2rem 1rem;
+            line-height: 1.7;
+        }
+
+        main {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        h1, h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.5em; }
+        h1 .icon, h2 .icon {
+            width: 1em;
+            height: 1em;
+        }
+
+        p, li {
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .status-box {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+        }
+
+        .status-box.success {
+            background-color: rgba(158, 206, 106, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-box.error {
+            background-color: rgba(247, 118, 142, 0.1);
+            color: var(--error-color);
+        }
+        
+        .status-box .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .endpoint-display {
+            font-family: var(--font-mono);
+            background-color: var(--bg-color);
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            word-break: break-all;
+            color: var(--accent-color);
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+        }
+        
+        ul li {
+            list-style: none;
+            position: relative;
+        }
+
+        ul li::before {
+            content: '›';
+            position: absolute;
+            left: -1.2rem;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        pre {
+            background-color: var(--bg-color);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            white-space: pre-wrap;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 1rem;
+            color: rgba(192, 202, 245, 0.5);
+        }
+        
+        footer pre {
+            background: none;
+            color: var(--accent-color);
+            text-align: center;
+            font-size: 1em;
+            margin-top: 1rem;
+            -webkit-user-select: none;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
-    <h1>LinkedIn MCP Server</h1>
-    <p>This is a Model Context Protocol (MCP) server that enables AI models like ChatGPT to interact with LinkedIn.</p>
-    
-    <div class="status success">
-        <strong>✅ Server Status:</strong> Online and Ready
-    </div>
-    
-    <div class="status info">
-        <strong>🔗 MCP Endpoint:</strong> 
-        <span class="endpoint" id="mcp-endpoint">Loading...</span>
-    </div>
+    <main>
+        <header class="card">
+            <h1>
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/><path d="m13 13.586-2.586-2.586-1.414 1.414L13 16.414l5-5-1.414-1.414z"/></svg>
+                LinkedIn MCP Interface
+            </h1>
+            <p>A client-side Model Context Protocol (MCP) server for interacting with the LinkedIn API through an AI model.</p>
+            <div id="server-status" class="status-box success">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-1.999 14.413-3.713-3.705L7.7 11.292l2.299 2.295 5.294-5.294 1.414 1.414-6.706 6.706z"/></svg>
+                <span>Server is online and ready for requests.</span>
+            </div>
+        </header>
 
-    <h2>Available Tools</h2>
-    <ul>
-        <li><strong>get_profile</strong> - Get LinkedIn profile information</li>
-        <li><strong>create_post</strong> - Create a new LinkedIn post</li>
-        <li><strong>search_organizations</strong> - Search for LinkedIn organizations</li>
-        <li><strong>get_organizations</strong> - Get organizations the user has access to</li>
-    </ul>
+        <div class="card">
+            <h2>
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8.465 11.293c1.133-1.133 3.109-1.133 4.242 0l.707.707c2.285-1.433 3.585-4.242 2.828-6.364-1.433.758-4.242-.542-6.364-2.828-.758 1.433.542 4.242-1.414 6.364L7.758 8.465c-1.133-1.133-1.133-3.109 0-4.242L9.172 2.81c-1.133-1.133-3.109-1.133-4.242 0L2.121 5.621c-1.133 1.133-1.133 3.109 0 4.242l1.414 1.414c1.133 1.133 3.109 1.133 4.242 0l.707-.707.707.707zm-.707 3.536-1.414-1.414c-1.133-1.133-3.109-1.133-4.242 0L.707 14.828c-1.133 1.133-1.133 3.109 0 4.242l2.81 2.81c1.133 1.133 3.109 1.133 4.242 0L9.172 20.5c1.133-1.133 1.133-3.109 0-4.242l-.707-.707.707-.707c1.133 1.133 3.109 1.133 4.242 0l.707-.707c-2.285 1.433-3.585 4.242-2.828 6.364 1.433-.758 4.242.542 6.364 2.828.758-1.433-.542-4.242 1.414-6.364l.707-.707c1.133 1.133 1.133 3.109 0 4.242l-1.414 1.414c-1.133 1.133-3.109 1.133-4.242 0l-.707-.707-.707.707z"/></svg>
+                MCP Endpoint
+            </h2>
+            <p>Provide this URL to your AI model to grant it access to the tools listed below.</p>
+            <div class="endpoint-display" id="mcp-endpoint">Loading...</div>
+        </div>
+        
+        <div class="card">
+            <h2>
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 7h-4V4c0-1.103-.897-2-2-2h-4c-1.103 0-2 .897-2 2v3H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V9c0-1.103-.897-2-2-2zM10 4h4v3h-4V4z"/></svg>
+                Available Tools
+            </h2>
+            <ul>
+                <li><strong>get_profile:</strong> Fetches the authenticated user's LinkedIn profile.</li>
+                <li><strong>create_post:</strong> Creates a new post on the user's LinkedIn feed.</li>
+                <li><strong>search_organizations:</strong> Searches for company pages on LinkedIn.</li>
+                <li><strong>get_organizations:</strong> Retrieves organizations the user can manage.</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                API Documentation
+            </h2>
+            <pre id="api-docs">Loading API documentation...</pre>
+        </div>
+    </main>
 
-    <h2>Integration Instructions</h2>
-    <ol>
-        <li>Copy the MCP endpoint URL above</li>
-        <li>In ChatGPT or Claude, configure MCP server with this URL</li>
-        <li>The server will handle MCP protocol requests automatically</li>
-    </ol>
-
-    <h2>API Documentation</h2>
-    <pre id="api-docs">Loading API documentation...</pre>
+    <footer>
+        <pre>
+     /\   /\
+    /  \_/  \
+   /   / \   \
+  /___/   \___\
+        </pre>
+        <p>Forged in the fires of a thousand console logs.</p>
+    </footer>
 
     <script>
-        // Set the MCP endpoint URL
-        document.getElementById('mcp-endpoint').textContent = window.location.origin + '/mcp';
-        
-        // MCP Server implementation
-        class LinkedInMCPServer {
-            constructor(linkedinToken = null) {
-                this.linkedinToken = linkedinToken;
-                this.tools = {
-                    get_profile: {
-                        name: "get_profile",
-                        description: "Get LinkedIn profile information for the current user",
-                        inputSchema: {
-                            type: "object",
-                            properties: {},
-                            required: []
-                        }
-                    },
-                    create_post: {
-                        name: "create_post",
-                        description: "Create a new LinkedIn post",
-                        inputSchema: {
-                            type: "object",
-                            properties: {
-                                text: {
-                                    type: "string",
-                                    description: "The text content of the post"
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- CORE MCP SERVER LOGIC ---
+            // This class simulates a backend server that understands the MCP protocol.
+            class LinkedInMCPServer {
+                constructor(linkedinToken = null) {
+                    this.linkedinToken = linkedinToken; // In a real app, this is handled via secure OAuth2
+                    this.tools = {
+                        get_profile: {
+                            name: "get_profile",
+                            description: "Get LinkedIn profile information for the current user.",
+                            inputSchema: { type: "object", properties: {}, required: [] }
+                        },
+                        create_post: {
+                            name: "create_post",
+                            description: "Create a new LinkedIn post.",
+                            inputSchema: {
+                                type: "object",
+                                properties: {
+                                    text: { type: "string", description: "The text content of the post." },
+                                    visibility: { type: "string", description: "Post visibility ('PUBLIC' or 'CONNECTIONS').", enum: ["PUBLIC", "CONNECTIONS"] }
                                 },
-                                visibility: {
-                                    type: "string",
-                                    description: "Post visibility (PUBLIC or CONNECTIONS)",
-                                    enum: ["PUBLIC", "CONNECTIONS"]
-                                }
-                            },
-                            required: ["text"]
+                                required: ["text"]
+                            }
+                        },
+                        search_organizations: {
+                            name: "search_organizations",
+                            description: "Search for LinkedIn organizations.",
+                            inputSchema: {
+                                type: "object",
+                                properties: { query: { type: "string", description: "Search query for organizations." } },
+                                required: ["query"]
+                            }
+                        },
+                        get_organizations: {
+                            name: "get_organizations",
+                            description: "Get organizations the user has administrator access to.",
+                            inputSchema: { type: "object", properties: {}, required: [] }
                         }
-                    },
-                    search_organizations: {
-                        name: "search_organizations", 
-                        description: "Search for LinkedIn organizations",
-                        inputSchema: {
-                            type: "object",
-                            properties: {
-                                query: {
-                                    type: "string",
-                                    description: "Search query for organizations"
-                                }
-                            },
-                            required: ["query"]
-                        }
-                    },
-                    get_organizations: {
-                        name: "get_organizations",
-                        description: "Get organizations the user has access to",
-                        inputSchema: {
-                            type: "object", 
-                            properties: {},
-                            required: []
-                        }
-                    }
-                };
-            }
+                    };
+                }
 
-            handleToolsList() {
-                return {
-                    jsonrpc: "2.0",
-                    result: {
-                        tools: Object.values(this.tools)
-                    }
-                };
-            }
-
-            handleToolsCall(params) {
-                const toolName = params.name;
-                const arguments_ = params.arguments || {};
+                handleToolsList() {
+                    return { jsonrpc: "2.0", result: { tools: Object.values(this.tools) } };
+                }
                 
-                if (!this.tools[toolName]) {
-                    return {
-                        jsonrpc: "2.0", 
-                        error: {
-                            code: -32602,
-                            message: `Unknown tool: ${toolName}`
-                        }
-                    };
-                }
+                async handleToolsCall(params) {
+                    const { name: toolName, arguments: toolArgs = {} } = params;
 
-                try {
-                    let result;
-                    switch(toolName) {
-                        case "get_profile":
-                            result = this.getProfile();
-                            break;
-                        case "create_post":
-                            result = this.createPost(arguments_.text, arguments_.visibility || "PUBLIC");
-                            break;
-                        case "search_organizations":
-                            result = this.searchOrganizations(arguments_.query);
-                            break;
-                        case "get_organizations":
-                            result = this.getOrganizations();
-                            break;
-                        default:
-                            result = { error: `Tool ${toolName} not implemented` };
+                    if (typeof this[toolName] !== 'function') {
+                        return { jsonrpc: "2.0", error: { code: -32602, message: `Unknown tool: ${toolName}` } };
                     }
+                    try {
+                        const result = await this[toolName](toolArgs);
+                        return { jsonrpc: "2.0", result: { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] } };
+                    } catch (error) {
+                        return { jsonrpc: "2.0", error: { code: -32603, message: `Internal error: ${error.message}` } };
+                    }
+                }
 
-                    return {
-                        jsonrpc: "2.0",
-                        result: {
-                            content: [{
-                                type: "text",
-                                text: JSON.stringify(result, null, 2)
-                            }]
-                        }
-                    };
-                } catch (error) {
-                    return {
-                        jsonrpc: "2.0",
-                        error: {
-                            code: -32603,
-                            message: `Internal error: ${error.message}`
-                        }
-                    };
+                // --- TOOL IMPLEMENTATIONS (MOCK ASYNC FUNCTIONS) ---
+                async get_profile(args) {
+                    console.log("TOOL CALL: get_profile", args);
+                    return { id: "sample-user-id", name: "Alex Doe", headline: "Senior AI Prompt Engineer", note: "This is a mock response." };
+                }
+
+                async create_post({ text, visibility = "PUBLIC" }) {
+                    console.log("TOOL CALL: create_post", { text, visibility });
+                    return { id: `demo-post-${Date.now()}`, status: "PUBLISHED", message: `Post with visibility '${visibility}' created successfully.` };
+                }
+
+                async search_organizations({ query }) {
+                    console.log("TOOL CALL: search_organizations", { query });
+                    return { results: [{ name: `Demo Company for '${query}'`, id: 12345 }], note: "Search results are mocked." };
+                }
+
+                async get_organizations(args) {
+                    console.log("TOOL CALL: get_organizations", args);
+                    return { organizations: [{ name: "Gemini Innovations", role: "ADMINISTRATOR" }] };
                 }
             }
+            
+            // --- UI INITIALIZATION ---
+            
+            // Set the MCP endpoint URL
+            document.getElementById('mcp-endpoint').textContent = window.location.origin + '/mcp';
+            
+            const mcpServer = new LinkedInMCPServer();
 
-            getProfile() {
-                return {
-                    id: "sample-user-id",
-                    firstName: { localized: { en_US: "Sample" } },
-                    lastName: { localized: { en_US: "User" } },
-                    headline: { localized: { en_US: "Professional Headline" } },
-                    industry: { localized: { en_US: "Technology" } },
-                    note: "This is a demo response. Connect your LinkedIn app for real data."
-                };
+            // Register Service Worker to intercept '/mcp' fetch requests.
+            // NOTE: You must create a 'sw.js' file for this to function.
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered successfully.', reg))
+                    .catch(err => {
+                        console.error('Service Worker registration failed:', err);
+                        const statusBox = document.getElementById('server-status');
+                        statusBox.className = 'status-box error';
+                        statusBox.innerHTML = `
+                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.953 2C6.423 2 2 6.423 2 11.953s4.423 9.953 9.953 9.953s9.953-4.423 9.953-9.953S17.483 2 11.953 2zm0 17.916c-4.396 0-7.963-3.567-7.963-7.963s3.567-7.963 7.963-7.963s7.963 3.567 7.963 7.963s-3.567 7.963-7.963 7.963zm-1-7.916h2v-5h-2v5zm0 3h2v-2h-2v2z"/></svg>
+                            <span><strong>Service Worker Failed:</strong> MCP requests will not be handled.</span>
+                        `;
+                    });
             }
 
-            createPost(text, visibility = "PUBLIC") {
-                return {
-                    message: `Post created successfully with visibility: ${visibility}`,
-                    text: text,
-                    id: `demo-post-${Math.floor(Math.random() * 10000)}`,
-                    status: "PUBLISHED"
-                };
-            }
-
-            searchOrganizations(query) {
-                return {
-                    elements: [{
-                        id: `org-${Math.floor(Math.random() * 1000)}`,
-                        localizedName: `Demo Organization for ${query}`,
-                        industry: "Technology",
-                        employeeCountRange: { start: 1001, end: 5000 }
-                    }],
-                    paging: { total: 1, count: 1, start: 0 }
-                };
-            }
-
-            getOrganizations() {
-                return {
-                    elements: [{
-                        organization: "urn:li:organization:demo123",
-                        role: "ADMINISTRATOR", 
-                        state: "APPROVED"
-                    }]
-                };
-            }
-        }
-
-        // Initialize MCP server
-        const mcpServer = new LinkedInMCPServer();
-        
-        // Handle MCP requests via service worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').then(registration => {
-                console.log('Service Worker registered successfully');
-            }).catch(error => {
-                console.log('Service Worker registration failed');
-            });
-        }
-
-        // Display API documentation
-        document.getElementById('api-docs').textContent = JSON.stringify({
-            protocol: "MCP 1.0",
-            endpoints: {
-                "POST /mcp": "Main MCP endpoint for tool calls",
-                "GET /": "This documentation page"
-            },
-            methods: ["tools/list", "tools/call"],
-            tools: Object.keys(mcpServer.tools)
-        }, null, 2);
+            // Display API documentation
+            document.getElementById('api-docs').textContent = JSON.stringify({
+                protocol: "MCP/1.0",
+                endpoint: "/mcp (POST)",
+                methods: ["tools/list", "tools/call"],
+                available_tools: Object.keys(mcpServer.tools)
+            }, null, 2);
+        });
     </script>
 </body>
 </html>
+```
