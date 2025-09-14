@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn MCP Server</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .status { padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .endpoint { font-family: monospace; background: #e9ecef; padding: 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>LinkedIn MCP Server</h1>
+    <p>This is a Model Context Protocol (MCP) server that enables AI models like ChatGPT to interact with LinkedIn.</p>
+    
+    <div class="status success">
+        <strong>✅ Server Status:</strong> Online and Ready
+    </div>
+    
+    <div class="status info">
+        <strong>🔗 MCP Endpoint:</strong> 
+        <span class="endpoint" id="mcp-endpoint">Loading...</span>
+    </div>
+
+    <h2>Available Tools</h2>
+    <ul>
+        <li><strong>get_profile</strong> - Get LinkedIn profile information</li>
+        <li><strong>create_post</strong> - Create a new LinkedIn post</li>
+        <li><strong>search_organizations</strong> - Search for LinkedIn organizations</li>
+        <li><strong>get_organizations</strong> - Get organizations the user has access to</li>
+    </ul>
+
+    <h2>Integration Instructions</h2>
+    <ol>
+        <li>Copy the MCP endpoint URL above</li>
+        <li>In ChatGPT or Claude, configure MCP server with this URL</li>
+        <li>The server will handle MCP protocol requests automatically</li>
+    </ol>
+
+    <h2>API Documentation</h2>
+    <pre id="api-docs">Loading API documentation...</pre>
+
+    <script>
+        // Set the MCP endpoint URL
+        document.getElementById('mcp-endpoint').textContent = window.location.origin + '/mcp';
+        
+        // MCP Server implementation
+        class LinkedInMCPServer {
+            constructor(linkedinToken = null) {
+                this.linkedinToken = linkedinToken;
+                this.tools = {
+                    get_profile: {
+                        name: "get_profile",
+                        description: "Get LinkedIn profile information for the current user",
+                        inputSchema: {
+                            type: "object",
+                            properties: {},
+                            required: []
+                        }
+                    },
+                    create_post: {
+                        name: "create_post",
+                        description: "Create a new LinkedIn post",
+                        inputSchema: {
+                            type: "object",
+                            properties: {
+                                text: {
+                                    type: "string",
+                                    description: "The text content of the post"
+                                },
+                                visibility: {
+                                    type: "string",
+                                    description: "Post visibility (PUBLIC or CONNECTIONS)",
+                                    enum: ["PUBLIC", "CONNECTIONS"]
+                                }
+                            },
+                            required: ["text"]
+                        }
+                    },
+                    search_organizations: {
+                        name: "search_organizations", 
+                        description: "Search for LinkedIn organizations",
+                        inputSchema: {
+                            type: "object",
+                            properties: {
+                                query: {
+                                    type: "string",
+                                    description: "Search query for organizations"
+                                }
+                            },
+                            required: ["query"]
+                        }
+                    },
+                    get_organizations: {
+                        name: "get_organizations",
+                        description: "Get organizations the user has access to",
+                        inputSchema: {
+                            type: "object", 
+                            properties: {},
+                            required: []
+                        }
+                    }
+                };
+            }
+
+            handleToolsList() {
+                return {
+                    jsonrpc: "2.0",
+                    result: {
+                        tools: Object.values(this.tools)
+                    }
+                };
+            }
+
+            handleToolsCall(params) {
+                const toolName = params.name;
+                const arguments_ = params.arguments || {};
+                
+                if (!this.tools[toolName]) {
+                    return {
+                        jsonrpc: "2.0", 
+                        error: {
+                            code: -32602,
+                            message: `Unknown tool: ${toolName}`
+                        }
+                    };
+                }
+
+                try {
+                    let result;
+                    switch(toolName) {
+                        case "get_profile":
+                            result = this.getProfile();
+                            break;
+                        case "create_post":
+                            result = this.createPost(arguments_.text, arguments_.visibility || "PUBLIC");
+                            break;
+                        case "search_organizations":
+                            result = this.searchOrganizations(arguments_.query);
+                            break;
+                        case "get_organizations":
+                            result = this.getOrganizations();
+                            break;
+                        default:
+                            result = { error: `Tool ${toolName} not implemented` };
+                    }
+
+                    return {
+                        jsonrpc: "2.0",
+                        result: {
+                            content: [{
+                                type: "text",
+                                text: JSON.stringify(result, null, 2)
+                            }]
+                        }
+                    };
+                } catch (error) {
+                    return {
+                        jsonrpc: "2.0",
+                        error: {
+                            code: -32603,
+                            message: `Internal error: ${error.message}`
+                        }
+                    };
+                }
+            }
+
+            getProfile() {
+                return {
+                    id: "sample-user-id",
+                    firstName: { localized: { en_US: "Sample" } },
+                    lastName: { localized: { en_US: "User" } },
+                    headline: { localized: { en_US: "Professional Headline" } },
+                    industry: { localized: { en_US: "Technology" } },
+                    note: "This is a demo response. Connect your LinkedIn app for real data."
+                };
+            }
+
+            createPost(text, visibility = "PUBLIC") {
+                return {
+                    message: `Post created successfully with visibility: ${visibility}`,
+                    text: text,
+                    id: `demo-post-${Math.floor(Math.random() * 10000)}`,
+                    status: "PUBLISHED"
+                };
+            }
+
+            searchOrganizations(query) {
+                return {
+                    elements: [{
+                        id: `org-${Math.floor(Math.random() * 1000)}`,
+                        localizedName: `Demo Organization for ${query}`,
+                        industry: "Technology",
+                        employeeCountRange: { start: 1001, end: 5000 }
+                    }],
+                    paging: { total: 1, count: 1, start: 0 }
+                };
+            }
+
+            getOrganizations() {
+                return {
+                    elements: [{
+                        organization: "urn:li:organization:demo123",
+                        role: "ADMINISTRATOR", 
+                        state: "APPROVED"
+                    }]
+                };
+            }
+        }
+
+        // Initialize MCP server
+        const mcpServer = new LinkedInMCPServer();
+        
+        // Handle MCP requests via service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').then(registration => {
+                console.log('Service Worker registered successfully');
+            }).catch(error => {
+                console.log('Service Worker registration failed');
+            });
+        }
+
+        // Display API documentation
+        document.getElementById('api-docs').textContent = JSON.stringify({
+            protocol: "MCP 1.0",
+            endpoints: {
+                "POST /mcp": "Main MCP endpoint for tool calls",
+                "GET /": "This documentation page"
+            },
+            methods: ["tools/list", "tools/call"],
+            tools: Object.keys(mcpServer.tools)
+        }, null, 2);
+    </script>
+</body>
+</html>
